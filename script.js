@@ -148,6 +148,43 @@ function typeWriter(element, text, speed = 100) {
     type();
 }
 
+// Calculate duration between dates
+function calculateDuration(startDate, endDate = null) {
+    const start = new Date(startDate);
+    const end = endDate ? new Date(endDate) : new Date();
+    
+    const yearDiff = end.getFullYear() - start.getFullYear();
+    const monthDiff = end.getMonth() - start.getMonth();
+    
+    let totalMonths = yearDiff * 12 + monthDiff;
+    
+    // Adjust if the end day is before the start day
+    if (end.getDate() < start.getDate()) {
+        totalMonths--;
+    }
+    
+    const years = Math.floor(totalMonths / 12);
+    const months = totalMonths % 12;
+    
+    if (years > 0 && months > 0) {
+        return `${years} yr ${months} mos`;
+    } else if (years > 0) {
+        return `${years} yr`;
+    } else {
+        return `${months} mos`;
+    }
+}
+
+// Update current role duration automatically
+function updateCurrentRoleDuration() {
+    const currentRoleDuration = document.querySelector('#tab1 .duration');
+    if (currentRoleDuration) {
+        const startDate = '2025-01-01'; // Jan 2025
+        const duration = calculateDuration(startDate);
+        currentRoleDuration.textContent = `Jan 2025 — Present · ${duration}`;
+    }
+}
+
 // Initialize typing effect when page loads
 document.addEventListener('DOMContentLoaded', () => {
     const nameElement = document.querySelector('.name');
@@ -155,4 +192,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const originalText = nameElement.textContent;
         typeWriter(nameElement, originalText, 150);
     }
+    
+    // Update current role duration
+    updateCurrentRoleDuration();
 });
